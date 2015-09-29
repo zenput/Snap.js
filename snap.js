@@ -204,7 +204,25 @@
 
                         settings.element.style[cache.vendor+'Transition'] = 'all ' + settings.transitionSpeed + 's ' + settings.easing;
 
+                        /**
+                         * @custom @author:david There is a bug with SnapJS where, in rare cases, the 'close' event
+                         * will not fire when the drawer closes. When this happens, the following `setInterval` continues
+                         * on infinitely. To stop this, we've added a max interval of 150 and call SnapJS's `easeCallback()` in that case,
+                         * which fires the normal 'close' event, etc.
+                         *
+                         * @see https://github.com/jakiestfu/Snap.js/issues/216
+                         * @see https://github.com/jakiestfu/Snap.js/issues/92 (possibly related)
+                         */
+
+                        var anim_count = 0;                                 // @custom
                         cache.animatingInterval = setInterval(function() {
+                            anim_count++;                                   // @custom
+                            if (anim_count > 150) {                         // @custom
+                                clearInterval(cache.animatingInterval);     // @custom
+                                action.translate.easeCallback();            // @custom
+                                anim_count = 0;                             // @custom
+                                return;                                     // @custom
+                            }                                               // @custom
                             utils.dispatchEvent('animating');
                         }, 1);
                         
