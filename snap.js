@@ -215,10 +215,10 @@
                          */
 
                         var anim_count = 0;                                 // @custom
+                        if (cache.animatingInterval) { clearInterval(cache.animatingInterval); }
                         cache.animatingInterval = setInterval(function() {
                             anim_count++;                                   // @custom
                             if (anim_count > 150) {                         // @custom
-                                clearInterval(cache.animatingInterval);     // @custom
                                 action.translate.easeCallback();            // @custom
                                 anim_count = 0;                             // @custom
                                 return;                                     // @custom
